@@ -1,18 +1,18 @@
 #!/bin/bash
 
+source ~/.bashrc
+
+cd /var/www/vhosts/localhost/ || exit
+
+# Setup env file
+env | grep '^SPOTWEB_' >.env
+sed -i 's/SPOTWEB_//g' .env
+
 # Set PHP Timezone
-echo "date.timezone = ${TZ}">/usr/local/lsws/lsphp74/etc/php/7.4/mods-available/0-timezone.ini
+echo "date.timezone = ${TZ}">/usr/local/lsws/lsphp81/etc/php/8.1/mods-available/0-timezone.ini
 
-if [ -z "$(ls -A -- "/var/www/vhosts/localhost/")" ]; then
-	mkdir -p /var/www/vhosts/localhost/
-	cd /var/www/vhosts/localhost/
-
-	git clone https://github.com/spotweb/spotweb .
-
-	# Composer 1.x
-	wget https://getcomposer.org/composer-1.phar -O composer.phar
-	chmod +x composer.phar
-fi
+# Update db if needed
+php bin/upgrade-db.php >> /usr/local/lsws/logs/spotweb_upgrade_db.log 2>&1
 
 # Start rootless cron
 /cron.sh &
