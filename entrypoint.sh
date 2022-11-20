@@ -9,7 +9,7 @@ env | grep '^SPOTWEB_' >.env
 sed -i 's/SPOTWEB_//g' .env
 
 # Set PHP Timezone
-echo "date.timezone = ${TZ}">/usr/local/lsws/lsphp81/etc/php/8.1/mods-available/0-timezone.ini
+echo "date.timezone = ${TZ}">/usr/local/lsws/lsphp80/etc/php/8.0/mods-available/0-timezone.ini
 
 # Update db if needed
 php bin/upgrade-db.php >> /usr/local/lsws/logs/spotweb_upgrade_db.log 2>&1
