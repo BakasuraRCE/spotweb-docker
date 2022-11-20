@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=litespeedtech/openlitespeed:1.7.16-lsphp80
+ARG BASE_IMAGE=litespeedtech/openlitespeed:1.7.16-lsphp81
 
 FROM ${BASE_IMAGE} as build
 
@@ -19,7 +19,7 @@ RUN git clone --branch master https://github.com/spotweb/spotweb . && \
     # install latest deps
     ./composer.phar install --optimize-autoloader --no-dev &&\
     # install dotenv
-    ./composer.phar require symfony/dotenv
+    ./composer.phar require symfony/dotenv szymach/c-pchart
 
 FROM ${BASE_IMAGE}
 
@@ -33,12 +33,12 @@ ENV APP_HOME /var/www/vhosts/localhost
 WORKDIR ${APP_HOME}
 
 # Setup PHP
-RUN ln -sf /usr/local/lsws/lsphp80/bin/php /usr/bin/php && \
-    ln -sf /usr/local/lsws/lsphp80/bin/pear /usr/bin/pear && \
-    ln -sf /usr/local/lsws/lsphp80/bin/peardev /usr/bin/peardev && \
-    ln -sf /usr/local/lsws/lsphp80/bin/pecl /usr/bin/pecl && \
-    sed -i.bak -E 's/memory_limit.+?=.+/memory_limit = 1024M/' /usr/local/lsws/lsphp80/etc/php/8.0/litespeed/php.ini && \
-    echo 'include_path = ".:/usr/local/lsws/lsphp80/share/php/"' >/usr/local/lsws/lsphp80/etc/php/8.0/mods-available/0-include-path.ini
+RUN ln -sf /usr/local/lsws/lsphp81/bin/php /usr/bin/php && \
+    ln -sf /usr/local/lsws/lsphp81/bin/pear /usr/bin/pear && \
+    ln -sf /usr/local/lsws/lsphp81/bin/peardev /usr/bin/peardev && \
+    ln -sf /usr/local/lsws/lsphp81/bin/pecl /usr/bin/pecl && \
+    sed -i.bak -E 's/memory_limit.+?=.+/memory_limit = 1024M/' /usr/local/lsws/lsphp81/etc/php/8.1/litespeed/php.ini && \
+    echo 'include_path = ".:/usr/local/lsws/lsphp81/share/php/"' >/usr/local/lsws/lsphp81/etc/php/8.1/mods-available/0-include-path.ini
 
 # Create default PHP user
 RUN groupadd worker &&\
