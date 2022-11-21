@@ -29,9 +29,13 @@ COPY ./Services_Image_Chart.php lib/services/Image/Services_Image_Chart.php
 
 FROM ${BASE_IMAGE}
 
-RUN apt-get update \
+RUN curl -o /etc/apt/trusted.gpg.d/mariadb_release_signing_key.asc 'https://mariadb.org/mariadb_release_signing_key.asc' &&\
+    sh -c "echo 'deb https://mirrors.gigenet.com/mariadb/repo/10.9/ubuntu focal main' >>/etc/apt/sources.list" &&\
+    apt-get update \
     && apt-get install -y \
-    iputils-ping htop nano &&\
+    iputils-ping htop nano \
+    # mysqladmin
+    mariadb-client &&\
     rm -rf /var/lib/apt/lists/*
 
 ENV APP_HOME /var/www/vhosts/localhost
