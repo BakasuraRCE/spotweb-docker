@@ -1,1 +1,1 @@
-docker build --no-cache -t bakasura/spotweb:latest .
+docker build -t bakasura/spotweb:latest .

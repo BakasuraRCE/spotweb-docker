@@ -19,13 +19,19 @@ RUN git clone --branch master https://github.com/spotweb/spotweb . && \
     # install latest deps
     ./composer.phar install --optimize-autoloader --no-dev &&\
     # install dotenv
-    ./composer.phar require symfony/dotenv szymach/c-pchart
+    ./composer.phar require symfony/dotenv &&\
+    ./composer.phar require szymach/c-pchart &&\
+    # remove broken chart class
+    rm -rf lib/services/Image/Services_Image_Chart.php
+
+# replace chart class
+COPY ./Services_Image_Chart.php lib/services/Image/Services_Image_Chart.php
 
 FROM ${BASE_IMAGE}
 
 RUN apt-get update \
     && apt-get install -y \
-    iputils-ping &&\
+    iputils-ping htop nano &&\
     rm -rf /var/lib/apt/lists/*
 
 ENV APP_HOME /var/www/vhosts/localhost
