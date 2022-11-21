@@ -39,6 +39,7 @@ Later, to set up the settings, you can provide the `SPOTWEB_INSTALL_KEY` to enab
 |--------------------------|-----------------------------------------|
 | `TIMEZONE`               | The timezone the server is running in.  |
 | `SPOTWEB_INSTALL_KEY`    | The install key for first time install. |
+| `SPOTWEB_DB_ENGINE`      | Just keep in pdo_mysql.                 |
 | `SPOTWEB_MYSQL_HOST`     | The database hostname / IP.             |
 | `SPOTWEB_MYSQL_DATABASE` | The database used for spotweb.          |
 | `SPOTWEB_MYSQL_USER`     | The database server username.           |
