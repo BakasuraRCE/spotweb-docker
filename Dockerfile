@@ -31,8 +31,9 @@ FROM ${BASE_IMAGE}
 
 RUN curl -o /etc/apt/trusted.gpg.d/mariadb_release_signing_key.asc 'https://mariadb.org/mariadb_release_signing_key.asc' &&\
     sh -c "echo 'deb https://mirrors.gigenet.com/mariadb/repo/10.9/ubuntu focal main' >>/etc/apt/sources.list" &&\
+    apt dist-upgrade &&\
     apt-get update \
-    && apt-get install -f -y \
+    && apt-get install -y \
     iputils-ping htop nano \
     # mysqladmin
     mariadb-client &&\
