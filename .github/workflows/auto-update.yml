@@ -9,8 +9,8 @@ jobs:
   check-update:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - name: Check for new version
-        uses: actions/checkout@v3
         run: |
           remote_date=$(date --utc +"%Y-%m-%d %H:%M:%S" -d "$(curl -s https://api.github.com/repos/spotweb/spotweb/commits/master | jq --raw-output '.commit.committer.date')")
           local_date=$(date --utc +"%Y-%m-%d %H:%M:%S" -d "$(git log -1 --format=%cI)")
