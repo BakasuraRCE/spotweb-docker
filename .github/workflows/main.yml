@@ -1,13 +1,14 @@
 name: ci
 
 on:
+  workflow_call:
   workflow_dispatch:
   push:
     branches:
       - 'master'
 
 jobs:
-  docker:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       -
@@ -27,4 +28,14 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
+          build-args: |
+            "BRANCH=master"
           tags: bakasura/spotweb:latest
+      -
+        name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          build-args: |
+            "BRANCH=develop"
+          tags: bakasura/spotweb:develop

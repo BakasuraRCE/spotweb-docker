@@ -2,13 +2,15 @@ ARG BASE_IMAGE=litespeedtech/openlitespeed:1.7.16-lsphp81
 
 FROM ${BASE_IMAGE} as build
 
+ARG BRANCH
+
 RUN apt-get update \
     && apt-get install -y \
     git
 
 WORKDIR /app
 
-RUN git clone --branch master https://github.com/spotweb/spotweb . && \
+RUN echo "Clone branch: ${BRANCH}" && git clone --branch ${BRANCH} https://github.com/spotweb/spotweb . && \
     # remove old deps
     rm -rf vendor composer.lock &&\
     # remove dev deps

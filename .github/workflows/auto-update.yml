@@ -1,0 +1,20 @@
+name: Auto Update
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  check-update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for new version
+        uses: actions/checkout@v3
+        run: |
+          remote_date=$(date --utc +"%Y-%m-%d %H:%M:%S" -d "$(curl -s https://api.github.com/repos/spotweb/spotweb/commits/master | jq --raw-output '.commit.committer.date')")
+          local_date=$(date --utc +"%Y-%m-%d %H:%M:%S" -d "$(git log -1 --format=%cI)")
+          if [[ "$remote_date" > "$local_date" ]] || [[ "$remote_date" == "$date_local" ]]; then exit 1; else exit 0; fi
+      - name: Deploy new version
+        if: failure()
+        uses: ./.github/workflows/main.yml
