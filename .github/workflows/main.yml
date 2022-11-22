@@ -1,11 +1,14 @@
-name: ci
+name: Build and Deploy to Docker Hub
 
 on:
   workflow_call:
   workflow_dispatch:
   push:
     branches:
-      - 'master'
+      - master
+    paths-ignore:
+      - .github/**
+      - README.md
 
 jobs:
   build-and-deploy:
