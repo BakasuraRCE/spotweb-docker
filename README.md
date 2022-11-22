@@ -7,13 +7,20 @@ An image running [openlitespeed/1.7.16-lsphp81](https://hub.docker.com/r/litespe
 
 ## Requirements
 
-You need a seperate MySQL / MariaDB server. This can of course be a (linked) docker container but also a dedicated database server.
+You need a separate MySQL / MariaDB server. This can of course be a (linked) docker container but also a dedicated database server.
 
 If you would like to use docker-compose, a short guide can be found [below](#docker-compose).
 
 ## Usage
 
 This is a **ROOTLESS** container, the default user ID is **1000**.
+
+### Tags
+
+| Tag       | Branch   |
+|-----------|----------|
+| `latest`  | master.  |
+| `develop` | develop. |
 
 ### Mount points
 
@@ -103,6 +110,11 @@ services:
       DATABASE_HOST: mysql
     restart: always
 ```
+
+## Repos
+
+- [GitHub](https://hub.docker.com/r/bakasura/spotweb)
+- [Docker Hub](https://hub.docker.com/r/bakasura/spotweb)
 
 ## Author Information
 
