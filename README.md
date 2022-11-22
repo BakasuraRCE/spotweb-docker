@@ -113,7 +113,7 @@ services:
 
 ## Repos
 
-- [GitHub](https://hub.docker.com/r/bakasura/spotweb)
+- [GitHub](https://github.com/BakasuraRCE/spotweb-docker)
 - [Docker Hub](https://hub.docker.com/r/bakasura/spotweb)
 
 ## Author Information
