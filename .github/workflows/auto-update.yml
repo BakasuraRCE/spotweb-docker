@@ -12,7 +12,9 @@ jobs:
       - uses: actions/checkout@v3
       - name: Check for new version
         run: |
-          remote_date=$(date --utc +"%Y-%m-%d %H:%M:%S" -d "$(curl -s https://api.github.com/repos/spotweb/spotweb/commits/master | jq --raw-output '.commit.committer.date')")
+          remote_date_master=$(date --utc +"%Y-%m-%d %H:%M:%S" -d "$(curl -s https://api.github.com/repos/spotweb/spotweb/commits/master | jq --raw-output '.commit.committer.date')")
+          remote_date_develop=$(date --utc +"%Y-%m-%d %H:%M:%S" -d "$(curl -s https://api.github.com/repos/spotweb/spotweb/commits/develop | jq --raw-output '.commit.committer.date')")
+          if [[ "$remote_date_master" > "$remote_date_develop" ]]; then remote_date=$remote_date_master; else remote_date=$remote_date_develop; fi
           local_date=$(date --utc +"%Y-%m-%d %H:%M:%S" -d "$(git log -1 --format=%cI)")
           if [[ "$remote_date" > "$local_date" ]] || [[ "$remote_date" == "$date_local" ]]; then exit 1; else exit 0; fi
       - name: Deploy new version
