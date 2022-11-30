@@ -13,7 +13,7 @@ WORKDIR /app
 RUN echo "Clone branch: ${BRANCH}" && git clone --branch ${BRANCH} https://github.com/spotweb/spotweb . && \
     # remove old deps
     rm -rf vendor composer.lock &&\
-    # remove dev deps
+    # remove dev deps (bug in composer, can't build without remove phpunit)
     sed -i '/phpunit/d' composer.json &&\
     # install composer 2.x
     wget https://getcomposer.org/download/latest-stable/composer.phar -O composer.phar && \
@@ -21,13 +21,8 @@ RUN echo "Clone branch: ${BRANCH}" && git clone --branch ${BRANCH} https://githu
     # install latest deps
     ./composer.phar install --optimize-autoloader --no-dev &&\
     # install dotenv
-    ./composer.phar require symfony/dotenv &&\
-    ./composer.phar require szymach/c-pchart &&\
-    # remove broken chart class
-    rm -rf lib/services/Image/Services_Image_Chart.php
+    ./composer.phar require symfony/dotenv
 
-# replace chart class
-COPY ./Services_Image_Chart.php lib/services/Image/Services_Image_Chart.php
 
 FROM ${BASE_IMAGE}
 
