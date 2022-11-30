@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+      with:
+        ref: master
 
     - name: Docker Hub Description
       uses: peter-evans/dockerhub-description@v3
