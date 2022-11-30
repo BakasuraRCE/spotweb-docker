@@ -1,0 +1,60 @@
+From 13fc7e1ab8c346d8b2eb8f9268ffc51e11d8fc19 Mon Sep 17 00:00:00 2001
+From: Bakasura <bakasura@protonmail.ch>
+Date: Wed, 30 Nov 2022 15:49:47 -0500
+Subject: [PATCH 1/2] fix: attachInfiniteScroll not work on widescreen monitors
+
+---
+ templates/we1rdo/js/scripts.js | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/templates/we1rdo/js/scripts.js b/templates/we1rdo/js/scripts.js
+index ccf1e94ea..72da6c23a 100644
+--- a/templates/we1rdo/js/scripts.js
++++ b/templates/we1rdo/js/scripts.js
+@@ -168,9 +168,16 @@ function attachInfiniteScroll() {
+ // console.time("2nd-ready");
+ 	var pagenr = $('#nextPage').val();
+ 	$(window).scroll(function() {
++		const {
++            scrollTop,
++            scrollHeight,
++            clientHeight
++        } = document.documentElement;
++		const endOfPage = scrollTop + clientHeight >= scrollHeight - 5;
++
+ 		var url = '?direction=next&data[spotsonly]=1&pagenr='+pagenr+$('#getURL').val()+' #spots';
+ 
+-		if($(document).scrollTop() >= $(document).height() - $(window).height() && $(document).height() >= $(window).height() && pagenr > 0 && $("#overlay").is(':hidden')) {
++		if(endOfPage && $(document).height() >= $(window).height() && pagenr > 0 && $("#overlay").is(':hidden')) {
+ 			if(!($("div.spots").hasClass("full"))) {
+ 				var scrollLocation = $("div.container").scrollTop();
+ 				$("#overlay").show().addClass('loading');
+
+From cef5c50ce908ebae2f52faf50c685a79c2e7097b Mon Sep 17 00:00:00 2001
+From: Bakasura <bakasura@protonmail.ch>
+Date: Wed, 30 Nov 2022 15:52:09 -0500
+Subject: [PATCH 2/2] fix: :lipstick:
+
+---
+ templates/we1rdo/js/scripts.js | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/templates/we1rdo/js/scripts.js b/templates/we1rdo/js/scripts.js
+index 72da6c23a..48f0cd92c 100644
+--- a/templates/we1rdo/js/scripts.js
++++ b/templates/we1rdo/js/scripts.js
+@@ -169,10 +169,10 @@ function attachInfiniteScroll() {
+ 	var pagenr = $('#nextPage').val();
+ 	$(window).scroll(function() {
+ 		const {
+-            scrollTop,
+-            scrollHeight,
+-            clientHeight
+-        } = document.documentElement;
++			scrollTop,
++			scrollHeight,
++			clientHeight
++		} = document.documentElement;
+ 		const endOfPage = scrollTop + clientHeight >= scrollHeight - 5;
+ 
+ 		var url = '?direction=next&data[spotsonly]=1&pagenr='+pagenr+$('#getURL').val()+' #spots';

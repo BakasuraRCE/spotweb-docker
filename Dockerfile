@@ -10,7 +10,11 @@ RUN apt-get update \
 
 WORKDIR /app
 
+COPY ./infinite_scroll.patch /infinite_scroll.patch
+
 RUN echo "Clone branch: ${BRANCH}" && git clone --branch ${BRANCH} https://github.com/spotweb/spotweb . && \
+    # patch code
+    patch -p1 < /infinite_scroll.patch &&\
     # remove old deps
     rm -rf vendor composer.lock &&\
     # remove dev deps (bug in composer, can't build without remove phpunit)
