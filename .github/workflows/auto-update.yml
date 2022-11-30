@@ -44,7 +44,7 @@ jobs:
         run: |
           git config --local user.email "bakasura@protonmail.ch"
           git config --local user.name "bakasura"
-          git commit -a -m "chore(deps): new version of nodejs-nativefier"
+          git commit -a -m "chore(deps): new version of spotweb"
 
       - name: Push changes
         if: ${{ steps.check_version.outputs.must_update == 1 }}
