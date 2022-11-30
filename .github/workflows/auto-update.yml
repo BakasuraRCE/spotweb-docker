@@ -6,17 +6,58 @@ on:
     - cron: "0 0 * * *"
 
 jobs:
-  check-update:
+  check_update:
     runs-on: ubuntu-latest
+    outputs:
+      must-update: ${{ steps.check_version.outputs.must_update }}
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
       - name: Check for new version
+        id: check_version
         run: |
           remote_date_master=$(date --utc +"%Y-%m-%d %H:%M:%S" -d "$(curl -s https://api.github.com/repos/spotweb/spotweb/commits/master | jq --raw-output '.commit.committer.date')")
           remote_date_develop=$(date --utc +"%Y-%m-%d %H:%M:%S" -d "$(curl -s https://api.github.com/repos/spotweb/spotweb/commits/develop | jq --raw-output '.commit.committer.date')")
           if [[ "$remote_date_master" > "$remote_date_develop" ]]; then remote_date=$remote_date_master; else remote_date=$remote_date_develop; fi
-          local_date=$(date --utc +"%Y-%m-%d %H:%M:%S" -d "$(git log -1 --format=%cI)")
-          if [[ "$remote_date" > "$local_date" ]] || [[ "$remote_date" == "$date_local" ]]; then exit 1; else exit 0; fi
-      - name: Deploy new version
-        if: failure()
-        uses: ./.github/workflows/main.yml
+          local_date=$(date --utc +"%Y-%m-%d %H:%M:%S" -d "$(git log -1 --format=%cI CURRENT_VERSIONS)")
+          echo "Remote date: $remote_date"
+          echo "Local date: $local_date"
+          must_update=0
+          if [[ "$remote_date" > "$local_date" ]] || [[ "$remote_date" == "$local_date" ]]; then must_update=1; fi
+          echo "must_update=$must_update" >> $GITHUB_OUTPUT
+
+      - name: Update version
+        if: ${{ steps.check_version.outputs.must_update == 1 }}
+        run: |
+          commit_master=$(curl -s https://api.github.com/repos/spotweb/spotweb/commits/master | jq --raw-output '.sha')
+          commit_develop=$(curl -s https://api.github.com/repos/spotweb/spotweb/commits/develop | jq --raw-output '.sha')
+          sed -i "s/master(.*)/master([${commit_master:0:6}](https:\/\/github.com\/spotweb\/spotweb\/tree\/${commit_master:0:6}))/g" README.md
+          sed -i "s/develop(.*)/develop([${commit_develop:0:6}](https:\/\/github.com\/spotweb\/spotweb\/tree\/${commit_develop:0:6}))/g" README.md
+          echo "master:${commit_master}">CURRENT_VERSIONS
+          echo "develop:${commit_develop}">>CURRENT_VERSIONS
+
+      - name: Commit files
+        id: commit
+        if: ${{ steps.check_version.outputs.must_update == 1 }}
+        run: |
+          git config --local user.email "bakasura@protonmail.ch"
+          git config --local user.name "bakasura"
+          git commit -a -m "chore(deps): new version of nodejs-nativefier"
+
+      - name: Push changes
+        if: ${{ steps.check_version.outputs.must_update == 1 }}
+        uses: ad-m/github-push-action@master
+
+  push-to-docker-hub:
+    needs: check_update
+    if: ${{ needs.check_update.outputs.must-update == 1 }}
+    uses: ./.github/workflows/main.yml
+    secrets: inherit
+
+  update-readme-on-docker-hub:
+    needs: check_update
+    if: ${{ needs.check_update.outputs.must-update == 1 }}
+    uses: ./.github/workflows/dockerhub-description.yml
+    secrets: inherit
