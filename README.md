@@ -19,8 +19,8 @@ This is a **ROOTLESS** container, the default user ID is **1000**.
 
 | Tag       | Branch                                                             |
 |-----------|--------------------------------------------------------------------|
-| `latest`  | master([xxxxxx](https://github.com/spotweb/spotweb/tree/xxxxxx)).  |
-| `develop` | develop([xxxxxx](https://github.com/spotweb/spotweb/tree/xxxxxx)). |
+| `latest`  | master([e070de](https://github.com/spotweb/spotweb/tree/e070de)).  |
+| `develop` | develop([f19d9c](https://github.com/spotweb/spotweb/tree/f19d9c)). |
 
 ### Mount points
 
