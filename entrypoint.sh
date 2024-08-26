@@ -10,7 +10,7 @@ sed -i 's/SPOTWEB_//g' .env
 
 # wait to mysql service
 echo 'Waiting to mysql service'
-while ! mysqladmin ping -h"${SPOTWEB_MYSQL_HOST}" --silent; do
+while ! mariadb-admin ping -h"${SPOTWEB_MYSQL_HOST}" --silent; do
   sleep 1
 done
 echo 'mysql service up'
